@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cns.productService.entities.Product;
@@ -29,29 +30,20 @@ public class ProductController {
 	}
 	
 	// Controlling for all products
-	@GetMapping
-	public ResponseEntity<List<Product>>allProducts(){
-		List<Product>list = productService.getAllProducts();
-		return new ResponseEntity<List<Product>>(list, HttpStatus.OK);
+	@GetMapping("/search")
+	public ResponseEntity<List<Product>>getSerachProduct(
+			 @RequestParam("keyword")String keyword)
+	{
+		List<Product>searchProduc = productService.searchProduct(keyword);
+		return new ResponseEntity<List<Product>>(searchProduc, HttpStatus.OK);
 	}
-	
-	// Controlling for single product
-	@GetMapping("/{id}")
-	public ResponseEntity<Product>singleProduct(@PathVariable("id")long id){
-		Product product = productService.getProduct(id);
-		return new ResponseEntity<Product>(product, HttpStatus.ACCEPTED);
-	}
-	
-	// Controlling for save product
-	@PostMapping
+
+	@PostMapping("/save")
 	public ResponseEntity<Product>createProduct(@RequestBody Product product){
-		Product prod = productService.saveProduct(product);
-		return new ResponseEntity<Product>(prod, HttpStatus.CREATED);
+		Product saveProduct = productService.saveProduct(product);
+		return new ResponseEntity<Product>(saveProduct, HttpStatus.CREATED);
 	}
 	
-	@DeleteMapping("{/id}")
-	public void deleteProduct(@PathVariable("id") long id){
-		 productService.deleteProduct(id);
-	}
+	
 
 }

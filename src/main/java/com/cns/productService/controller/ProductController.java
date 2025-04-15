@@ -25,7 +25,7 @@ import com.cns.productService.service.ProductService;
 
 
 @RestController
-@RequestMapping("/proudcts")
+@RequestMapping("/products")
 public class ProductController {
 	
 	private final ProductService productService;
@@ -41,8 +41,8 @@ public class ProductController {
 	public ResponseEntity<List<Product>>getSerachProduct(
 			 @RequestParam("keyword")String keyword)
 	{
-		List<Product>searchProduc = productService.searchProduct(keyword);
-		return new ResponseEntity<List<Product>>(searchProduc, HttpStatus.OK);
+		List<Product>searchProduct = productService.searchProduct(keyword);
+		return new ResponseEntity<List<Product>>(searchProduct, HttpStatus.OK);
 	}
 
 	@PostMapping("/save")
@@ -129,6 +129,16 @@ public class ProductController {
 		Product updatedProduct2 = productService.updateProduct(id, updateProduct);
 		
 		return new ResponseEntity<Product>(updatedProduct2, HttpStatus.ACCEPTED);
+		
+	}
+	
+	// Search product using SQL native query
+	
+	@GetMapping("/searchSQL")
+	public ResponseEntity<List<Product>>getSearchSQL(@RequestParam("searchQuery") String quesearchQuery){
+		List<Product>searchProduct = productService.searchUsingSQL(quesearchQuery);
+		System.out.println("SQL Search ===::"+ searchProduct);
+		return new ResponseEntity<List<Product>>(searchProduct, HttpStatus.OK);
 		
 	}
 	

@@ -11,17 +11,29 @@ import com.cns.productService.entities.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-	
-	
-	@Query("SELECT p FROM Product p WHERE p.name LIKE CONCAT('%', :keyword, '%')"
-			+ " OR p.description LIKE CONCAT('%', :keyword, '%')")
-	List<Product> searchProduct(@Param("keyword") String keyword);
 
-	
-	@Query(value="SELECT p FROM Product p WHERE"+
-			"p.name LIKE CONCAT('%',:keyword, '%')"+
-			"Or p.description LIKE CONCAT('%',:keyword, '%')", nativeQuery = true	
-					)
-			List<Product>searchProductSQL(@Param("keyword") String keyword);
+	@Query("SELECT p FROM Product p WHERE " +
+		       "LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+		       "LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+		       "LOWER(p.brand) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+		       "STR(p.quantity) LIKE CONCAT('%', :keyword, '%') OR " +
+		       "STR(p.price) LIKE CONCAT('%', :keyword, '%') OR " +
+		       "LOWER(p.imageName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+		       "LOWER(p.imageType) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+		List<Product> searchProduct(@Param("keyword") String keyword);
+
+
+
+	@Query(value = "SELECT * FROM product WHERE " +
+		       "LOWER(name) LIKE LOWER(CONCAT('%', :searchQuery, '%')) OR " +
+		       "LOWER(description) LIKE LOWER(CONCAT('%', :searchQuery, '%')) OR " +
+		       "LOWER(brand) LIKE LOWER(CONCAT('%', :searchQuery, '%')) OR " +
+		       "CAST(quantity AS CHAR) LIKE CONCAT('%', :searchQuery, '%') OR " +
+		       "CAST(price AS CHAR) LIKE CONCAT('%', :searchQuery, '%') OR " +
+		       "LOWER(image_name) LIKE LOWER(CONCAT('%', :searchQuery, '%')) OR " +
+		       "LOWER(image_type) LIKE LOWER(CONCAT('%', :searchQuery, '%'))", nativeQuery = true)
+		List<Product> searchProductSQL(@Param("searchQuery") String searchQuery);
+
+
 
 }

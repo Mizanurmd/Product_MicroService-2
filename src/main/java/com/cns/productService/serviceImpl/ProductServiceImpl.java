@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cns.productService.entities.Product;
 import com.cns.productService.repository.ProductRepository;
@@ -21,10 +22,11 @@ public class ProductServiceImpl implements ProductService {
 		this.productRepository =productRepository;
 	}
 
+	@Transactional
 	@Override
 	public List<Product> searchProduct(String keyword) {
 		List<Product> productList = productRepository.searchProduct(keyword);
-		return null;
+		return productList;
 	}
 
 	@Override
@@ -76,6 +78,12 @@ public class ProductServiceImpl implements ProductService {
 	public void removeProduct(long id) {
 		productRepository.deleteById(id);
 		
+	}
+
+	@Transactional
+	@Override
+	public List<Product> searchUsingSQL(String searchQuery) {
+		return productRepository.searchProductSQL(searchQuery);
 	}
 	
 	
